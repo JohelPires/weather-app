@@ -34,33 +34,8 @@ function App() {
         setWeatherData(actualData)
       })
       .catch((err) => console.log(err.message))
-      .finally(() => console.log('data loaded'))
+      .finally(() => setLoaded(true))
   }, [])
-
-  function getMainTranslation(desc) {
-    switch (desc.toLowerCase()) {
-      case 'drizzle':
-        return 'Garoa'
-        break
-      case 'clouds':
-        return 'Nublado'
-        break
-      case 'rain':
-        return 'Chuva'
-        break
-      case 'snow':
-        return 'Neve'
-        break
-      case 'clear':
-        return 'Céu limpo'
-        break
-      case 'thunderstom':
-        return 'Tempestade'
-        break
-      default:
-        break
-    }
-  }
 
   function getLocation() {
     if (navigator.geolocation) {
@@ -80,26 +55,31 @@ function App() {
   }
 
   getLocation()
+  if (loaded) {
+    return (
+      <div className='App'>
+        <header className='App-header'>
+          <h1>
+            {weatherData.name}, {weatherData.sys.country}
+          </h1>
+          <h1>{weatherData.weather[0].main}</h1>
+          <h1>Temperatura: {Math.round(weatherData.main.temp)} ºC</h1>
+          <h1>
+            Sensação térmica: {Math.round(weatherData.main.feels_like)} ºC
+          </h1>
+          <h1>Mínima: {Math.round(weatherData.main.temp_min)} ºC</h1>
+          <h1>Máxima: {Math.round(weatherData.main.temp_max)} ºC</h1>
+          <h1>
+            humidade relativa do ar: {Math.round(weatherData.main.humidity)}%
+          </h1>
 
-  return (
-    <div className='App'>
-      <header className='App-header'>
-        <h1>
-          {weatherData.name}, {weatherData.sys.country}
-        </h1>
-        <h1>{weatherData.weather[0].main}</h1>
-        <h1>{getMainTranslation(weatherData.weather[0].main)}</h1>
-        <h1>Temperatura: {Math.round(weatherData.main.temp)} ºC</h1>
-        <h1>Sensação térmica: {Math.round(weatherData.main.feels_like)} ºC</h1>
-        <h1>Mínima: {Math.round(weatherData.main.temp_min)} ºC</h1>
-        <h1>Máxima: {Math.round(weatherData.main.temp_max)} ºC</h1>
-        <h1>
-          humidade relativa do ar: {Math.round(weatherData.main.humidity)}
-        </h1>
-        <img src={weatherData.weather[0].icon} alt='' srcset='' />
-      </header>
-    </div>
-  )
+          <img src={weatherData.weather[0].icon} alt='icon' />
+        </header>
+      </div>
+    )
+  } else {
+    return <h1>loading</h1>
+  }
 }
 
 export default App
