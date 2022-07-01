@@ -23,6 +23,8 @@ import './App.css'
 
 function App() {
   const [weatherData, setWeatherData] = useState({})
+  const [loaded, setLoaded] = useState(false)
+
   const url =
     'https://weather-proxy.freecodecamp.rocks/api/current?lat=-15.6042883&lon=-56.0584591'
   useEffect(() => {
@@ -34,6 +36,31 @@ function App() {
       .catch((err) => console.log(err.message))
       .finally(() => console.log('data loaded'))
   }, [])
+
+  function getMainTranslation(desc) {
+    switch (desc.toLowerCase()) {
+      case 'drizzle':
+        return 'Garoa'
+        break
+      case 'clouds':
+        return 'Nublado'
+        break
+      case 'rain':
+        return 'Chuva'
+        break
+      case 'snow':
+        return 'Neve'
+        break
+      case 'clear':
+        return 'Céu limpo'
+        break
+      case 'thunderstom':
+        return 'Tempestade'
+        break
+      default:
+        break
+    }
+  }
 
   function getLocation() {
     if (navigator.geolocation) {
@@ -51,7 +78,9 @@ function App() {
         position.coords.longitude
     )
   }
+
   getLocation()
+
   return (
     <div className='App'>
       <header className='App-header'>
@@ -59,6 +88,7 @@ function App() {
           {weatherData.name}, {weatherData.sys.country}
         </h1>
         <h1>{weatherData.weather[0].main}</h1>
+        <h1>{getMainTranslation(weatherData.weather[0].main)}</h1>
         <h1>Temperatura: {Math.round(weatherData.main.temp)} ºC</h1>
         <h1>Sensação térmica: {Math.round(weatherData.main.feels_like)} ºC</h1>
         <h1>Mínima: {Math.round(weatherData.main.temp_min)} ºC</h1>
